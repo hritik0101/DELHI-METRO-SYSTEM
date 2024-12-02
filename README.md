@@ -29,5 +29,7 @@ Utilized for efficient pathfinding with Dijkstra’s algorithm, ensuring that th
 Breadth-First Search (BFS): 
 Applied for determining the minimum number of intermediate stations between the source and destination.
 
+Dijkstra’s Algorithm: 
+Used to find the shortest path based on distance or time.
 # Purpose:
 This project is aimed at providing a simulation of real-world metro networks and optimizing the travel time for passengers by calculating efficient routes using different algorithms.
