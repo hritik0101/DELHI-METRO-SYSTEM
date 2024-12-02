@@ -2,7 +2,9 @@
 This project implements a metro network management system using advanced data structures and algorithms in C++. The application allows users to manage stations, paths, and find optimal routes based on distance, time, and number of changes in a metro network.
 
 Key Features:
-Graph-based Representation: The metro network is represented as an undirected weighted graph, where vertices are metro stations and edges represent the direct paths between stations, with associated distances and travel times.
+
+# Graph-based Representation: 
+The metro network is represented as an undirected weighted graph, where vertices are metro stations and edges represent the direct paths between stations, with associated distances and travel times.
 
 
 Dijkstra's Algorithm: Used to find the shortest path between two stations based on distance or time, providing an optimal route for commuters.
