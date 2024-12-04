@@ -531,7 +531,7 @@ int main()
         }
         else if(choice == 6)
         {
-            cout<<"ENTER MANSTER KEY :";
+            cout<<"ENTER MANSTER KEY (12345):";
             string s;
             // getline(cin, s);
             cin>>s;
