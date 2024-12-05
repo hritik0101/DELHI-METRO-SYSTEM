@@ -1,13 +1,12 @@
-
-
-// Map for station names with corresponding numeric IDs
 unordered_map<int, string> mp;
+unordered_map<string, int> ms;
 
+       
 class Graph_M {
 public:
     class Vertex {
     public:
-        std::unordered_map<int, pair<int,int>> nbrs; // Neighbors and their edge weights
+        std::unordered_map<int, pair<int,int>> nbrs; 
     };
 
     // Static map to store vertices, with integer keys
@@ -23,33 +22,28 @@ public:
     void addVertex(int vname) 
     {
         Vertex vtx;
-        vtces[vname] = vtx; // Add the vertex to the static map
+        vtces[vname] = vtx; 
     }
     
     // Method to remove a vertex from the graph
     void removeVertex(int vname) 
     {
-        // Check if the vertex exists
         if (vtces.find(vname) == vtces.end()) {
             std::cout << "Vertex " << vname << " does not exist.\n";
             return;
         }
 
-        // Get the vertex to be removed
         Vertex& vtx = vtces[vname];
 
-        // Get all its neighbors
         std::vector<int> keys;
         for (const auto& pair : vtx.nbrs) {
-            keys.push_back(pair.first); // Collect neighbor keys
+            keys.push_back(pair.first); 
         }
 
-        // Remove the vertex from each neighbor's adjacency list
         for (int key : keys) {
             vtces[key].nbrs.erase(vname);
         }
 
-        // Remove the vertex from the graph
         vtces.erase(vname);
     }
 
@@ -74,7 +68,6 @@ public:
 
     // Method to remove an edge between two vertices
     void removeEdge(int vname1, int vname2) {
-        // Check if the vertices exist and the edge is present
         if (vtces.find(vname1) == vtces.end() || vtces.find(vname2) == vtces.end())
         {
             cout<<"ENTER VALID STATION NUMBERS!!";
@@ -86,34 +79,28 @@ public:
             return;
         }
 
-        // Remove the edge in both directions (undirected graph)
         vtces[vname1].nbrs.erase(vname2);
         vtces[vname2].nbrs.erase(vname1);
     }
 
-    // Method to calculate the number of edges in the graph
     int numEdges() const {
         int count = 0;
 
-        // Iterate over all vertices
         for (const auto& pair : vtces) {
             const Vertex& vtx = pair.second;
-            count += vtx.nbrs.size(); // Add the number of neighbors
+            count += vtx.nbrs.size();
         }
 
-        // Divide by 2 because the graph is undirected
         return count / 2;
     }
 
     // Method to check if an edge exists between two vertices
     bool containsEdge(int vname1, int vname2) const {
-        // Check if both vertices exist
         if (vtces.find(vname1) == vtces.end() || vtces.find(vname2) == vtces.end()) {
             return false;
         }
 
-        // Check if vname1 has vname2 as a neighbor
-        const Vertex& vtx1 = vtces.at(vname1); // Use at for const safety
+        const Vertex& vtx1 = vtces.at(vname1);
         if (vtx1.nbrs.find(vname2) == vtx1.nbrs.end()) {
             return false;
         }
@@ -123,20 +110,16 @@ public:
 
     // Method to check if there's a path from vname1 to vname2
     bool hasPath(int vname1, int vname2, std::unordered_map<int, bool>& processed) {
-        // Check if there's a direct edge between vname1 and vname2
         if (containsEdge(vname1, vname2)) {
             return true;
         }
 
-        // Mark the vertex as processed
         processed[vname1] = true;
 
-        // Get the neighbors of vname1
         const Vertex& vtx = vtces[vname1];
         for (const auto& nbr : vtx.nbrs) {
             int nbrVertex = nbr.first;
 
-            // If the neighbor is not processed, recursively check if there's a path
             if (processed.find(nbrVertex) == processed.end()) {
                 if (hasPath(nbrVertex, vname2, processed)) {
                     return true;
@@ -150,22 +133,18 @@ public:
 
     // Dijkstra's Algorithm to find the shortest path from source to destination
     void dijkstra(int source, int destination) {
-        // Initialize the distance map and priority queue
-        std::unordered_map<int, int> dist;  // Distance from source
-        std::unordered_map<int, int> parent; // To keep track of the path
-        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq; // Min-heap
+        std::unordered_map<int, int> dist;
+        std::unordered_map<int, int> parent;
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq; 
 
-        // Initialize all distances to infinity and the parent to -1
         for (auto& vertex : vtces) {
             dist[vertex.first] = INT_MAX;
             parent[vertex.first] = -1;
         }
 
-        // Set the distance of the source to 0 and push it into the priority queue
         dist[source] = 0;
         pq.push({0, source});
 
-        // Process vertices using the priority queue
         while (!pq.empty()) {
             int u = pq.top().second;
             pq.pop();
@@ -202,22 +181,18 @@ public:
         }
     }
     void dijkstra2(int source, int destination) {
-        // Initialize the time map and priority queue
-        std::unordered_map<int, int> time;  // time from source
-        std::unordered_map<int, int> parent; // To keep track of the path
-        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq; // Min-heap
+        std::unordered_map<int, int> time;  
+        std::unordered_map<int, int> parent; 
+        std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;
 
-        // Initialize all time to infinity and the parent to -1
         for (auto& vertex : vtces) {
             time[vertex.first] = INT_MAX;
             parent[vertex.first] = -1;
         }
 
-        // Set the time of the source to 0 and push it into the priority queue
         time[source] = 0;
         pq.push({0, source});
 
-        // Process vertices using the priority queue
         while (!pq.empty()) {
             int u = pq.top().second;
             pq.pop();
@@ -236,7 +211,6 @@ public:
             }
         }
 
-        // Backtrack to find the shortest path
         if (time[destination] == INT_MAX) {
             std::cout << "No path found.\n";
         } else {
@@ -254,51 +228,43 @@ public:
         }
     }
 
-    // BFS to find the minimum number of intermediate stations (edges) from source to destination
     void bfsMinStations(int source, int destination) 
     {
-        std::unordered_map<int, int> distance;  // Stores the minimum number of edges
-        std::unordered_map<int, int> intermediateStations;  // Stores number of intermediate stations
-        std::unordered_map<int, int> parent;  // To reconstruct the path
-        std::queue<int> q;  // Queue for BFS
+        std::unordered_map<int, int> distance;  
+        std::unordered_map<int, int> intermediateStations;  
+        std::unordered_map<int, int> parent; 
+        std::queue<int> q; 
 
-        // Initialize all vertices as unvisited
         for (auto& vertex : vtces) {
-            distance[vertex.first] = -1;  // -1 means unvisited
-            intermediateStations[vertex.first] = -1;  // -1 means uninitialized
-            parent[vertex.first] = -1;  // No parent initially
+            distance[vertex.first] = -1; 
+            intermediateStations[vertex.first] = -1; 
+            parent[vertex.first] = -1; 
         }
 
-        // Start BFS from the source vertex
         distance[source] = 0;
-        intermediateStations[source] = 0;  // No intermediate stations for the source itself
+        intermediateStations[source] = 0;  
         q.push(source);
 
-        // BFS loop
         while (!q.empty()) {
             int u = q.front();
             q.pop();
 
-            // If we reach the destination, stop BFS
             if (u == destination) {
                 break;
             }
 
-            // Traverse neighbors of the current vertex
             for (auto& nbr : vtces[u].nbrs) {
                 int v = nbr.first;
 
-                // If the neighbor is unvisited
                 if (distance[v] == -1) {
-                    distance[v] = distance[u] + 1;  // Increment the distance
-                    intermediateStations[v] = intermediateStations[u] + 1;  // Update intermediate station count
-                    parent[v] = u;  // Set parent for path reconstruction
+                    distance[v] = distance[u] + 1; 
+                    intermediateStations[v] = intermediateStations[u] + 1; 
+                    parent[v] = u; 
                     q.push(v);
                 }
             }
         }
 
-        // Output the result
         if (distance[destination] == -1) {
             std::cout << "No path found from " << mp[source] << " to " << mp[destination] << ".\n";
         } else {
@@ -306,9 +272,8 @@ public:
             std::cout << "Minimum number of intermediate stations between " << mp[source] << " and " << mp[destination] << " is: " 
                       << intermediateStations[destination] << "\n";
 
-            // Reconstruct and display the path
             std::cout << "Path: ";
-            std::stack<int> path;  // Stack to reverse the path as we are backtracking
+            std::stack<int> path;  
             int current = destination;
             while (current != -1) {
                 path.push(current);
@@ -334,10 +299,9 @@ public:
 
         // Adding vertices to the graph (first 10 stations)
         for (int i = 0; i < 10; ++i) {
-            addVertex(i);  // Add vertex using numeric ID
+            addVertex(i);  
         }
 
-        // Adding edges (connections between stations) with weights
         addEdge(0, 1, 8, 12);    // Noida Sector 62~B <-> Botanical Garden~B (distance: 8 km, time: 12 min)
         addEdge(1, 2, 10, 15);   // Botanical Garden~B <-> Yamuna Bank~B (distance: 10 km, time: 15 min)
         addEdge(2, 4, 8, 10);    // Yamuna Bank~B <-> Vaishali~B (distance: 8 km, time: 10 min)
@@ -365,8 +329,6 @@ public:
         for (const auto& pair : vtces) 
         {
             vec.push_back({pair.first+1,mp[pair.first]});
-            // std::cout << pair.first << ". " << mp[pair.first] << "\n";  // Display the station number and name (vertex id)
-            // i++;
         }
         sort(vec.begin(),vec.end());
         for(auto k:vec)
@@ -402,24 +364,18 @@ void display_Map() const
 
             // Format the output with necessary spacing
             str += "            \t         " + nbr_str;
-            
-            // Adjust spacing after the neighbor's name (assuming names are ~15 characters long)
-            str += "\t\t\t";  // Adding a tab if name is shorter than 15 chars
+             
+            str += "\t\t\t";  
 
-            // Ensure fare (weight) is properly aligned
             str += std::to_string(weight);
 
-            // Add space between fare and time
             str += "       \t";
 
-            // Add the time information, also aligned for clarity
             str += std::to_string(time);
             
-            // New line for the next entry
             str += "       \n";  
         }
 
-        // Print the final formatted string for each vertex
         std::cout << str;
     }
 
@@ -428,6 +384,9 @@ void display_Map() const
 }
 
 };
+
+
+
 
 // Define the static member
 std::unordered_map<int, Graph_M::Vertex> Graph_M::vtces;
